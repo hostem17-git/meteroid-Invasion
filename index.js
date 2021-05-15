@@ -1,82 +1,83 @@
-var canvas = document.querySelector("canvas");
+const canvas = document.querySelector("canvas");
+const ctx = canvas.getContext("2d");
 
-canvas.width = innerWidth;
+
+canvas.width = innerWidth
 canvas.height = innerHeight;
 
-var ctx = canvas.getContext("2d");
-
-
-
-var mouse={
+var click ={
     x:undefined,
     y:undefined
 }
 
-
-addEventListener("resize",function(){
-    canvas.width = innerWidth;
-    canvas.height = innerHeight;
-    init();
-});
-
-
-function getDistance( a,b){
-    return Math.pow((a.x -b.x),2) + Math.pow((a.y - b.y),2);
-}
-
-addEventListener("mousemove",function(e){
-    mouse.x = e.clientX;
-    mouse.y = e.clientY;
-})
-
-class Circle{
+class Player{
     constructor(x,y,radius,color){
         this.x = x;
         this.y = y;
-        this.radius = radius;
         this.color = color;
+        this.radius = radius;
     }
 
     draw(){
         ctx.beginPath();
-        ctx.arc(this.x,this.y,this.radius,0,2*Math.PI,false);
         ctx.fillStyle = this.color;
+        ctx.arc(this.x,this.y,this.radius,0,2*Math.PI,false);
         ctx.fill();
         ctx.closePath();
     }
+}
 
+class Projectile{
+    constructor(x,y,radius,color,velocity){
+        this.x = x;
+        this.y = y;
+        this.radius = radius;
+        this.color = color;
+        this.velocity = velocity; 
+    }
+
+    draw(){
+        ctx.beginPath();
+        ctx.fillStyle = this.color;
+        ctx.arc(this.x,this.y,this.radius,0,2*Math.PI,false);
+        ctx.fill();
+        ctx.closePath();
+    }
     update(){
-        
+        this.x = this.x + this.velocity.x;
+        this.y = this.y + this.velocity.y;
         this.draw();
     }
 }
 
-var circle1,circle2;
 
-function init(){
-    circle1 = new Circle(canvas.width/2 - 100,canvas.height/2,100,"black");
-    circle2 = new Circle(canvas.width/2 + 100,canvas.height/2,30,"red");
-}
+const player = new Player(canvas.width/2,canvas.height/2,20,"blue");
 
+player.draw();
+
+var projectiles  = [];
 
 function animate(){
     requestAnimationFrame(animate);
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-
-    circle2.x = mouse.x;
-    circle2.y = mouse.y;
-    console.log("hi")
-    console.table(getDistance(circle1,circle2),);
-    if(getDistance(circle1,circle2) <= Math.pow(circle2.radius+circle1.radius,2)){
-        circle1.color="red";
-    }else
-        circle1.color="black";
-    //console.table(getDistance(circle1,circle2),Math.pow(circle1.radius + circle2.radius,2));
-    
-    circle1.update();
-    circle2.update();
+    ctx.clearRect(0,0,innerWidth,innerHeight);
+    player.draw();
+    projectiles.forEach(projectile=>{
+        projectile.update()
+    })
 }
 
+var velocityCeofficient = 10;
 
-init();
-animate();
+
+addEventListener("click",(event)=>{
+    let angle = Math.atan2((event.clientY - innerHeight/2),(event.clientX - innerWidth/2))
+    let projectile = new Projectile(innerWidth/2, innerHeight/2, 10,"red",{
+        x:  velocityCeofficient * Math.cos(angle),
+        y:  velocityCeofficient * Math.sin(angle)
+    })
+    projectiles.push(projectile);
+    
+
+})
+
+animate()
