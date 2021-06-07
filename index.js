@@ -9,13 +9,17 @@ ctx.canvas.height = window.innerHeight;
 var projectiles  = [];
 var enemies = [];
 var particles = [];
+var pulseParticles = [];
 var projectileSpeed = 8;
 var enemySpeed = 1;
 var enemySpawnTime = 1000;
 var friction = .99;
 var score = 0;
 
+
 var scoreElement = document.querySelector("#score");
+
+
 class Player{
     constructor(x,y,radius,color){
         this.x = x;
@@ -34,6 +38,29 @@ class Player{
 }
 
 class Projectile{
+    constructor(x,y,radius,color,velocity){
+        this.x = x;
+        this.y = y;
+        this.radius = radius;
+        this.color = color;
+        this.velocity = velocity; 
+    }
+
+    draw(){
+        ctx.beginPath();
+        ctx.fillStyle = this.color;
+        ctx.arc(this.x,this.y,this.radius,0,2*Math.PI,false);
+        ctx.fill();
+        ctx.closePath();
+    }
+    update(){
+        this.x = this.x + this.velocity.x;
+        this.y = this.y + this.velocity.y;
+        this.draw();
+    }
+}
+
+class PulseParticle{
     constructor(x,y,radius,color,velocity){
         this.x = x;
         this.y = y;
@@ -78,7 +105,6 @@ class Enemy{
         this.draw();
     }
 }
-
 
 class Particle{
     constructor(x,y,radius,color,velocity){
@@ -142,15 +168,48 @@ function spawnEnemy(){
     enemies.push(enemy);
 }
 
+function createPulse(){
+    pulseParticles = [];
+    var pulseParticleCount = 600;
+    var angleStep =(Math.PI*2)/pulseParticleCount;
+    for(var i = 0;i<pulseParticleCount;i++){
+        pulseParticles.push(new PulseParticle(window.innerWidth/2,window.innerHeight/2,4,'white',{
+            x: projectileSpeed/2 * Math.cos(angleStep*i) ,
+            y: projectileSpeed/2 * Math.sin(angleStep*i)
+                }
+            )
+        )
+    }
+    
+}
 
 var animationFrameId;
 function animate(){
-    console.log(score)
+    //console.log(pulseParticles)
     animationFrameId = requestAnimationFrame(animate);
     ctx.fillStyle = 'rgba(0,0,0,0.1)'
     ctx.fillRect(0,0,innerWidth,innerHeight);
     player.draw();
     
+
+    //draw pulse
+    pulseParticles.forEach((pulseParticle,pulseParticleIndex)=>{
+        //out of bound projectile 
+        if(pulseParticle.x < 0 || pulseParticle.x > canvas.width || pulseParticle.y < 0 || pulseParticle.y > canvas.height){
+            pulseParticles.splice(pulseParticleIndex,1);
+        }else{
+            pulseParticle.update()
+        }
+
+        enemies.forEach((enemy,enemyIndex)=>{
+            if(getDistance(pulseParticle,enemy) <= ((pulseParticle.radius + enemy.radius)*(pulseParticle.radius + enemy.radius))){
+                score += 2;
+                enemies.splice(enemyIndex,1);
+                scoreElement.innerHTML = score;
+            }
+            
+        })
+    })
     projectiles.forEach((projectile,projectileIndex)=>{
         //out of bound projectile 
         if(projectile.x < 0 || projectile.x > canvas.width || projectile.y < 0 || projectile.y > canvas.height){
@@ -207,9 +266,7 @@ function animate(){
     
 }
 
-addEventListener("resize",()=>{
-    location.reload()
-})
+
 
 addEventListener("click",(event)=>{
     let angle = Math.atan2((event.clientY - innerHeight/2),(event.clientX - innerWidth/2))
@@ -221,5 +278,15 @@ addEventListener("click",(event)=>{
     
 
 })
+
+document.addEventListener("keydown",function(e){
+    var key = e.key;
+    if(key == "Enter")
+        createPulse();
+    
+  
+  },false);
+
+
 animate();
 setInterval(spawnEnemy,enemySpawnTime)
