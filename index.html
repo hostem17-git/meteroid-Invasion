@@ -5,8 +5,18 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        .score{
+            position: absolute;
+            color: white;
+            font-size: 22px;
+        }
+    </style>
 </head>
 <body style="margin:0">
+    <div class = "score" style ="user-select: none;">
+        <span>Score:</span><span id = "score">0</span>
+    </div>
     <canvas></canvas>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.1/gsap.min.js" integrity="sha512-cdV6j5t5o24hkSciVrb8Ki6FveC2SgwGfLE31+ZQRHAeSRxYhAQskLkq3dLm8ZcWe1N3vBOEYmmbhzf7NTtFFQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src = "index.js"></script>

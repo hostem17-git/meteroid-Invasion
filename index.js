@@ -8,10 +8,14 @@ ctx.canvas.height = window.innerHeight;
 
 var projectiles  = [];
 var enemies = [];
-var projectileSpeed = 5;
-var enemySpeed = 2;
+var particles = [];
+var projectileSpeed = 8;
+var enemySpeed = 1;
 var enemySpawnTime = 1000;
+var friction = .99;
+var score = 0;
 
+var scoreElement = document.querySelector("#score");
 class Player{
     constructor(x,y,radius,color){
         this.x = x;
@@ -76,6 +80,37 @@ class Enemy{
 }
 
 
+class Particle{
+    constructor(x,y,radius,color,velocity){
+        this.x = x;
+        this.y = y;
+        this.radius = radius;
+        this.color = color;
+        this.velocity = velocity;
+        this.alpha = 1; 
+    }
+
+    draw(){
+        ctx.beginPath();
+        ctx.fillStyle = this.color;
+        ctx.arc(this.x,this.y,this.radius,0,2*Math.PI,false);
+        ctx.fill();
+        ctx.closePath();
+    }
+    update(){
+        ctx.save();
+        ctx.globalAlpha = this.alpha;
+        this.alpha -= .03;
+        this.velocity.x *= friction;
+        this.velocity.y *= friction;
+        this.x = this.x + this.velocity.x;
+        this.y = this.y + this.velocity.y;
+        this.draw();
+        ctx.restore();
+    }
+}
+
+
 const player = new Player(canvas.width/2,canvas.height/2,20,"white");
 
 player.draw();
@@ -110,13 +145,14 @@ function spawnEnemy(){
 
 var animationFrameId;
 function animate(){
-
+    console.log(score)
     animationFrameId = requestAnimationFrame(animate);
     ctx.fillStyle = 'rgba(0,0,0,0.1)'
     ctx.fillRect(0,0,innerWidth,innerHeight);
     player.draw();
     
     projectiles.forEach((projectile,projectileIndex)=>{
+        //out of bound projectile 
         if(projectile.x < 0 || projectile.x > canvas.width || projectile.y < 0 || projectile.y > canvas.height){
             projectiles.splice(projectileIndex,1);
         }else{
@@ -124,25 +160,49 @@ function animate(){
         }
     })
     enemies.forEach((enemy,enemyIndex)=>{
+        //enemy player collision
         if(getDistance(player,enemy) <= ((player.radius + enemy.radius)*(player.radius + enemy.radius))){
             cancelAnimationFrame(animationFrameId);
         }
 
-
+        //projectile enemy collision
         projectiles.forEach((projectile,projectileIndex)=>{
             if(getDistance(projectile,enemy) <= ((projectile.radius + enemy.radius)*(projectile.radius + enemy.radius))){
+                
                 gsap.to(enemy,{
                     radius:enemy.radius-10,
-                })        
+                })
+                if(enemy.radius >= 10){
+                    score += 5;
+                }
+                else{
+                    score += 10;
+                }
+                scoreElement.innerHTML = score;
                 projectiles.splice(projectileIndex,1);
+                
+                for(var i=0;i<enemy.radius*2;i++){
+                    particles.push(new Particle(enemy.x,enemy.y,Math.random()*3,enemy.color,{
+                        x:(Math.random() -.5) * (Math.random() * 8),
+                        y:(Math.random() -.5) * (Math.random() * 8)
+                    }))
+                }   
             }
         })
+
         if(enemy.radius<=10){
             enemies.splice(enemyIndex,1);
         }else{
             enemy.update();
         }
-        
+    })
+
+    particles.forEach((particle,particleIndex)=>{
+        if(particle.alpha>0){
+            particle.update();
+        }else{
+            particles.splice(particleIndex,1);
+        }
     })
     
 }
