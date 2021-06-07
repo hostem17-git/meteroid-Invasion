@@ -10,14 +10,28 @@
             position: absolute;
             color: white;
             font-size: 22px;
+            padding: 10px;
+            margin-top: 10px;
+            user-select: none;
+        }
+        .pulse{
+            color: white;
+            position: absolute;
+            right: 6px;
+            padding: 10px;
+            font-size: 22px;
+            margin-top: 10px;
+            user-select: none;
         }
     </style>
 </head>
 <body style="margin:0">
-    <div class = "score" style ="user-select: none;">
+    <div class = "score" >
         <span>Score:</span><span id = "score">0</span>
     </div>
-
+    <div class ="pulse">
+        <span>Pulse Count: </span><span id="pulseCount">0</span>
+    </div>
     <canvas></canvas>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.1/gsap.min.js" integrity="sha512-cdV6j5t5o24hkSciVrb8Ki6FveC2SgwGfLE31+ZQRHAeSRxYhAQskLkq3dLm8ZcWe1N3vBOEYmmbhzf7NTtFFQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src = "index.js"></script>

@@ -10,6 +10,7 @@ var projectiles  = [];
 var enemies = [];
 var particles = [];
 var pulseParticles = [];
+var pulseCount=0;
 var projectileSpeed = 8;
 var enemySpeed = 1;
 var enemySpawnTime = 1000;
@@ -18,7 +19,7 @@ var score = 0;
 
 
 var scoreElement = document.querySelector("#score");
-
+var pulseCountElement = document.querySelector("#pulseCount")
 
 class Player{
     constructor(x,y,radius,color){
@@ -204,6 +205,11 @@ function animate(){
         enemies.forEach((enemy,enemyIndex)=>{
             if(getDistance(pulseParticle,enemy) <= ((pulseParticle.radius + enemy.radius)*(pulseParticle.radius + enemy.radius))){
                 score += 2;
+                if( score%100==0 && score>0){
+                    pulseCount++;
+                    pulseCountElement.innerHTML = pulseCount;
+                }
+
                 enemies.splice(enemyIndex,1);
                 scoreElement.innerHTML = score;
             }
@@ -236,6 +242,10 @@ function animate(){
                 }
                 else{
                     score += 10;
+                }
+                if( score%100==0 && score>0){
+                    pulseCount++;
+                    pulseCountElement.innerHTML = pulseCount;
                 }
                 scoreElement.innerHTML = score;
                 projectiles.splice(projectileIndex,1);
@@ -279,12 +289,14 @@ addEventListener("click",(event)=>{
 
 })
 
-document.addEventListener("keydown",function(e){
+addEventListener("keydown",function(e){
     var key = e.key;
-    if(key == "Enter")
-        createPulse();
-    
-  
+    if(key == "Enter" && pulseCount>0)
+        {
+            createPulse();
+            pulseCount--;
+            pulseCountElement.innerHTML = pulseCount;
+        }  
   },false);
 
 
