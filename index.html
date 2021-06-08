@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <style>
-        .score{
+        .score {
             position: absolute;
             color: white;
             font-size: 22px;
@@ -14,7 +15,8 @@
             margin-top: 10px;
             user-select: none;
         }
-        .pulse{
+
+        .pulse {
             color: white;
             position: absolute;
             right: 6px;
@@ -23,17 +25,67 @@
             margin-top: 10px;
             user-select: none;
         }
+
+        .pulseBarContainer {
+            position: absolute;
+            display: inline-block;
+            height: 40px;
+            background-color: rgba(0, 0, 0, 0.01);
+            border: 1px solid white;
+            width: 30%;
+            left: 37%;
+            margin-top: 10px;
+            /*rgb(0, 153, 255);*/
+        }
+
+        .pulseBar {
+            position: absolute;
+            display: inline-block;
+            height: 40px;
+            background-color: rgba(0, 153, 255, 0.8);
+            width: 0%;
+            transition: all 0.1s;
+        }
+
+        .blink {
+            animation: blink-animation .5s steps(5, start) infinite;
+            -webkit-animation: blink-animation 1s steps(5, start) infinite;
+        }
+
+        @keyframes blink-animation {
+            to {
+                visibility: hidden;
+            }
+        }
+
+        @-webkit-keyframes blink-animation {
+            to {
+                visibility: hidden;
+            }
+        }
+
     </style>
 </head>
+
 <body style="margin:0">
-    <div class = "score" >
-        <span>Score:</span><span id = "score">0</span>
+    <div class="score">
+        <span>Score:</span><span id="score">0</span>
     </div>
-    <div class ="pulse">
+    <div class="pulseBarContainer">
+        <div class="pulseBar">
+
+        </div>
+    </div>
+
+    <div class="pulse">
+        <span></span>
         <span>Pulse Count: </span><span id="pulseCount">0</span>
     </div>
     <canvas></canvas>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.1/gsap.min.js" integrity="sha512-cdV6j5t5o24hkSciVrb8Ki6FveC2SgwGfLE31+ZQRHAeSRxYhAQskLkq3dLm8ZcWe1N3vBOEYmmbhzf7NTtFFQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src = "index.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.1/gsap.min.js"
+        integrity="sha512-cdV6j5t5o24hkSciVrb8Ki6FveC2SgwGfLE31+ZQRHAeSRxYhAQskLkq3dLm8ZcWe1N3vBOEYmmbhzf7NTtFFQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="index.js"></script>
 </body>
+
 </html>

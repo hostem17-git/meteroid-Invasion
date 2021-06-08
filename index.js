@@ -20,6 +20,7 @@ var score = 0;
 
 var scoreElement = document.querySelector("#score");
 var pulseCountElement = document.querySelector("#pulseCount")
+var pulseBarElement = document.querySelector(".pulseBar")
 
 class Player{
     constructor(x,y,radius,color){
@@ -137,7 +138,6 @@ class Particle{
     }
 }
 
-
 const player = new Player(canvas.width/2,canvas.height/2,20,"white");
 
 player.draw();
@@ -186,7 +186,12 @@ function createPulse(){
 
 var animationFrameId;
 function animate(){
-    //console.log(pulseParticles)
+    pulseBarElement.style.width = `${(score %101)}%`;
+    if((score %101)>90){
+        pulseBarElement.style.backgroundColor = "rgb(9, 247, 9)";
+    }else{
+        pulseBarElement.style.backgroundColor = "rgba(0, 153, 255,0.8)"; 
+    }
     animationFrameId = requestAnimationFrame(animate);
     ctx.fillStyle = 'rgba(0,0,0,0.1)'
     ctx.fillRect(0,0,innerWidth,innerHeight);
