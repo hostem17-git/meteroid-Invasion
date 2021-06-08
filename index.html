@@ -33,7 +33,7 @@
             background-color: rgba(0, 0, 0, 0.01);
             border: 1px solid white;
             width: 30%;
-            left: 37%;
+            left: 35%;
             margin-top: 10px;
             /*rgb(0, 153, 255);*/
         }
@@ -48,10 +48,14 @@
         }
 
         .blink {
-            animation: blink-animation .5s steps(5, start) infinite;
+            animation: blink-animation .1s steps(5, start) infinite;
             -webkit-animation: blink-animation 1s steps(5, start) infinite;
         }
 
+        .hint{
+            font-size: 15px;
+            margin-right: 10px;
+        }
         @keyframes blink-animation {
             to {
                 visibility: hidden;
@@ -78,7 +82,7 @@
     </div>
 
     <div class="pulse">
-        <span></span>
+        <span class = "hint blink">Press Enter Key</span>
         <span>Pulse Count: </span><span id="pulseCount">0</span>
     </div>
     <canvas></canvas>
