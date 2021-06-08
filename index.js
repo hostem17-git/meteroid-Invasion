@@ -1,9 +1,8 @@
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
 
-
-ctx.canvas.width = window.innerWidth
-ctx.canvas.height = window.innerHeight;
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight-4.5;
 
 
 var projectileSpeed = 8;
@@ -17,6 +16,16 @@ var pulseCount = 0;
 var enemySpawnTime = 1000;
 var score = 0;
 var pulseLev = 0;
+
+var scoreElement = document.querySelector("#score");
+var pulseCountElement = document.querySelector("#pulseCount");
+var pulseBarElement = document.querySelector(".pulseBar");
+var hintElement = document.querySelector(".hint")
+var hudElement = document.querySelector(".hud");
+var finalScoreElement = document.querySelector(".finalScore");
+var startButtonElement = document.querySelector(".startButton");
+
+
 function init() {
     projectiles = [];
     enemies = [];
@@ -26,13 +35,10 @@ function init() {
     enemySpawnTime = 1000;
     score = 0;
     pulseLev = 0;
+    animate();
+    setInterval(spawnEnemy, enemySpawnTime)
+    hudElement.style.display = "none"
 }
-
-
-var scoreElement = document.querySelector("#score");
-var pulseCountElement = document.querySelector("#pulseCount");
-var pulseBarElement = document.querySelector(".pulseBar");
-var hintElement = document.querySelector(".hint")
 
 class Player {
     constructor(x, y, radius, color) {
@@ -189,11 +195,10 @@ function createPulse() {
         pulseParticles.push(new PulseParticle(window.innerWidth / 2, window.innerHeight / 2, 4, 'white', {
             x: projectileSpeed / 2 * Math.cos(angleStep * i),
             y: projectileSpeed / 2 * Math.sin(angleStep * i)
-        }
-        )
+            }
+            )
         )
     }
-
 }
 
 var animationFrameId;
@@ -251,6 +256,9 @@ function animate() {
         //enemy player collision
         if (getDistance(player, enemy) <= ((player.radius + enemy.radius) * (player.radius + enemy.radius))) {
             cancelAnimationFrame(animationFrameId);
+            finalScoreElement.innerHTML = score;
+            hudElement.style.display="inline-block";
+            startButtonElement.innerHTML = "Restart";
         }
 
         //projectile enemy collision
@@ -321,13 +329,10 @@ addEventListener("resize", function (e) {
 
 addEventListener("keydown", function (e) {
     var key = e.key;
-    if (key == "Enter" && pulseCount > 0) {
+    if (key  && pulseCount > 0) {
         createPulse();
         pulseCount--;
         pulseCountElement.innerHTML = pulseCount;
     }
 }, false);
 
-init();
-animate();
-setInterval(spawnEnemy, enemySpawnTime)

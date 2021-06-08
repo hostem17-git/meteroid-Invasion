@@ -7,6 +7,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <style>
+        body{
+            margin: 0;
+            background-color: black;
+        }
         .score {
             position: absolute;
             color: white;
@@ -55,6 +59,49 @@
         .hint{
             font-size: 15px;
             margin-right: 10px;
+            display: none;
+        }
+
+        .hud{
+            display: inline-block;
+            position: fixed;
+            width: 30%;
+            height: 40%;
+            background-color: #e3f6f5;
+            color:#272343;
+            top:25%;
+            left:35%;
+            text-align: center;
+            vertical-align: middle;
+            
+        }
+
+        .hudContent{
+            top:10%;
+            position: relative;;
+        }
+
+        .finalScore{
+            font-size: 76px;
+            margin: 0;
+            font-weight: 600;
+        }
+
+        .points{
+            font-weight: lighter;
+            margin-top: 5px;
+            font-size: larger;
+        }
+
+        .startButton{
+            display: inline-block;
+            width: 50%;
+            font-size: x-large;
+            margin-top: 3%;
+        }
+
+        .instructions{
+            text-align: left;
         }
         @keyframes blink-animation {
             to {
@@ -71,7 +118,7 @@
     </style>
 </head>
 
-<body style="margin:0">
+<body>
     <div class="score">
         <span>Score:</span><span id="score">0</span>
     </div>
@@ -85,6 +132,20 @@
         <span class = "hint blink">Press Enter Key</span>
         <span>Pulse Count: </span><span id="pulseCount">0</span>
     </div>
+    <div class = "hud">
+        <div class ="hudContent">
+            <p class="finalScore">0</p>
+        <p class = "points" >Points</p>
+        <div class ="instructions">
+            <ul>
+                <li> Shoot Away the enemies!! Use right mouse click to fire</li>
+                <li> Filling up the boost bar gives you a pulse.Press Enter to use the pulse and clear all nearby enemies</li>
+            </ul>
+        </div>
+        <button class = "startButton" onclick="init()">Start Game</button>
+        </div>
+    </div>
+
     <canvas></canvas>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.1/gsap.min.js"
         integrity="sha512-cdV6j5t5o24hkSciVrb8Ki6FveC2SgwGfLE31+ZQRHAeSRxYhAQskLkq3dLm8ZcWe1N3vBOEYmmbhzf7NTtFFQ=="
